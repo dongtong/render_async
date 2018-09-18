@@ -5,7 +5,13 @@ if (window.jQuery) {
         $("#<%= container_id %>").replaceWith(response);
 
         <% if event_name.present? %>
-          document.dispatchEvent(new Event("<%= event_name %>"));
+          if (typeof(Event) === 'function') {
+            document.dispatchEvent(new Event("<%= event_name %>"));
+          } else {
+            var ieEvent = document.createEvent("IE_Event");
+            ieEvent.initEvent("<%= event_name %>", true, true);
+            document.dispatchEvent(ieEvent);
+          }
         <% end %>
       });
     });
